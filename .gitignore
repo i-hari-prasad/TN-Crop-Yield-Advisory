@@ -1,0 +1,29 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.env
+.venv
+env.bak/
+venv.bak/
+
+# Streamlit specific
+.streamlit/secrets.toml
+
+# IDEs
+.vscode/
+.idea/
+.spyderproject
+.ropeproject
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
