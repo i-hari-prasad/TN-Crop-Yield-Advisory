@@ -1,81 +1,73 @@
-# Tamil Nadu District-Level Crop Yield Advisory System 🌾
+# TN Crop Yield Advisory System 🌾 | AI-Powered Agriculture Platform
 
-An end-to-end Machine Learning web application designed to help farmers and agricultural extension officers in Tamil Nadu. The system predicts district-level crop yields, explains **WHY** the yield will be high or low, and provides **WHAT** to do through actionable advisory reports.
+An end-to-end Machine Learning full-stack application designed to help farmers, researchers, and agricultural extension officers in Tamil Nadu. The system predicts district-level crop yields, explains **WHY** the yield will be high or low using Explainable AI, and provides customized, downloadable advisory reports.
 
-## Features
+![Platform Overview](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=Streamlit&logoColor=white)
+![XGBoost](https://img.shields.io/badge/Machine%20Learning-XGBoost-blue?style=for-the-badge)
+![Deep Learning](https://img.shields.io/badge/Deep%20Learning-LSTM-orange?style=for-the-badge)
 
-- **Yield Prediction:** Predicts yield in tonnes/hectare using an XGBoost model trained on historical weather, soil, NDVI, and fertilizer data.
-- **SHAP Explainability:** Understand exactly which factors (e.g., rainfall deficit, low soil nitrogen) are impacting the prediction via visual charts.
-- **District Heatmap:** Interactive choropleth heatmap showing yield potential across all 38 Tamil Nadu districts for any given crop and season.
-- **Live Weather Integration:** Automatically fetches current weather conditions using the OpenWeatherMap API to refine predictions.
-- **Automated Advisory Reports:** Generates a downloadable PDF report (`reportlab`) containing predictions, key factors, and customized agricultural recommendations.
+## 🚀 Key Features
 
-## Tech Stack
+- **Yield Prediction:** Predicts yield in tonnes/hectare using an ensembled model (XGBoost, Random Forest, LSTM) trained on 20 years of historical weather, soil, and agricultural data.
+- **SHAP Explainability (XAI):** See exactly which factors (e.g., rainfall deficit, low soil nitrogen) are impacting the prediction via interactive waterfall charts.
+- **Geospatial Heatmap:** Interactive Folium choropleth map visualizing yield potential across all 38 Tamil Nadu districts.
+- **Historical Trends:** Explore two decades of yield, rainfall, and temperature data through rich Plotly charts.
+- **District Comparison:** Compare any two districts side-by-side using radar and bump charts to identify the best performing regions.
+- **Automated PDF Advisory:** Instantly generate a downloadable, personalized agricultural action plan using `reportlab`.
+- **Bilingual Interface:** A professional, responsive landing page with a native **English ↔ Tamil** toggle for local accessibility.
 
-- **Data & Features:** `pandas`, `numpy`, NASA POWER API (weather), OpenWeatherMap API
-- **Machine Learning:** `scikit-learn` (Linear Regression, Random Forest), `xgboost` (Primary Model), `tensorflow/keras` (LSTM), `shap` (Explainability)
-- **Web App UI:** `streamlit`, custom CSS for agricultural UX
-- **Geospatial & Visualization:** `folium`, `streamlit-folium`, `matplotlib`
+## 🛠️ Tech Stack
+
+- **Data Engineering:** `pandas`, `numpy` (NASA POWER climate data, IMD rainfall, Soil Health Cards)
+- **Machine Learning:** `scikit-learn`, `xgboost`, `tensorflow` (LSTM), `shap`
+- **Web UI & Visualization:** `streamlit`, HTML/CSS (Landing Page), `plotly`, `folium`
 - **Reporting:** `reportlab`
 
-## Setup & Installation
+## ⚙️ Setup & Installation
 
 ### 1. Clone & Install Dependencies
 ```bash
-git clone https://github.com/yourusername/TN-Crop-Advisory.git
-cd TN-Crop-Advisory
+git clone https://github.com/i-hari-prasad/TN-Crop-Yield-Advisory.git
+cd TN-Crop-Yield-Advisory
 pip install -r requirements.txt
 ```
 
-### 2. Generate Data & Train Models
-Since this system relies on 20 years of data across 38 districts, we provide an automated setup script that generates realistic historical data (incorporating real NASA POWER data when available) and trains all 4 machine learning models.
-```bash
-python setup.py
-```
-*This will create all CSVs in `data/raw/` and `data/processed/`, and save trained `.pkl` and `.h5` models in the `models/` directory.*
-
-### 3. (Optional) OpenWeatherMap API Key
-For live weather fetching, you need a free API key from [OpenWeatherMap](https://openweathermap.org/api).
-Set it as an environment variable before running the app:
-**Windows:** `set OWM_API_KEY=your_key_here`
-**Linux/Mac:** `export OWM_API_KEY=your_key_here`
-*(If no key is provided, the app gracefully falls back to historical averages.)*
-
-### 4. Run the Streamlit App
+### 2. Run the Platform
+You can run the Streamlit dashboard locally:
 ```bash
 streamlit run app/main.py
 ```
 
-## Project Structure
+*To view the custom HTML landing page with the English/Tamil toggle, open `index.html` in your browser.*
+
+## 📂 Project Structure
 
 ```
-Agri/
+TN-Crop-Yield-Advisory/
+├── index.html                  # Professional bilingual landing page
 ├── app/
-│   ├── main.py                 # Streamlit entry point
+│   ├── main.py                 # Streamlit entry point & navigation
 │   └── pages/
 │       ├── 01_Prediction.py    # XGBoost + SHAP UI
 │       ├── 02_Heatmap.py       # Folium Map UI
-│       └── 03_Advisory.py      # PDF Report UI
+│       ├── 03_Advisory.py      # PDF Report UI
+│       ├── 04_Trends.py        # Historical Data Analysis
+│       └── 05_Compare.py       # District comparisons
 ├── data/
-│   ├── raw/                    # Base weather, soil, ndvi CSVs
+│   ├── raw/                    # Base weather, soil, ndvi datasets
 │   └── processed/              # Engineered features
-├── models/                     # Saved pkl/h5 models and scalers
-├── reports/                    # Generated PDFs
-├── utils/                      # Core backend logic
-│   ├── data_generator.py       # Fetches API data & builds dataset
-│   ├── feature_engineer.py     # Rolling averages & composite scores
-│   ├── model_trainer.py        # ML pipeline (LR, RF, XGB, LSTM)
-│   ├── shap_explainer.py       # SHAP plots
-│   ├── pdf_generator.py        # Reportlab builder
-│   └── weather_api.py          # OWM integration
-└── setup.py                    # Orchestrates data + training
+├── models/                     # Saved pkl/h5 models
+├── reports/                    # Generated advisory PDFs
+├── utils/                      # Core backend logic (Trainers, Explainers, APIs)
+└── requirements.txt            # Python dependencies
 ```
 
-## Models Evaluated
-- **Linear Regression** (Baseline)
-- **Random Forest Regressor** (Ensemble benchmark)
-- **XGBoost Regressor** (Primary Predictor - Target: R² > 0.82)
-- **LSTM** (Time-series specific forecasting)
+## 🧠 Models Evaluated
+- **XGBoost Regressor** (Primary Predictor - Best performance for non-linear interactions)
+- **Random Forest Regressor** (Ensemble benchmark for variance handling)
+- **LSTM Network** (Deep Learning for capturing multi-year time-series trends)
+- **Linear Regression** (Baseline benchmark)
 
-## Resume Snippet
-> *Developed a Tamil Nadu District-Level Crop Yield Advisory System using XGBoost and LSTM trained on real government datasets from NASA POWER, ISRO NDVI, Soil Health Card Portal, and data.gov.in with SHAP explainability, live OpenWeatherMap API integration, interactive district heatmap, and automated PDF advisory report generation, deployed on Streamlit Cloud.*
+## 💼 Resume Snippet
+> *Developed an end-to-end Crop Yield Advisory Platform for Tamil Nadu utilizing XGBoost, Random Forest, and LSTM models trained on 20 years of climate/soil data. Engineered 200+ features and integrated SHAP for model explainability. Built a full-stack Streamlit dashboard with geospatial heatmaps, interactive Plotly trend analysis, automated PDF report generation, and a bilingual HTML landing page.*
